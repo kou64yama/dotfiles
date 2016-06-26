@@ -1,0 +1,31 @@
+call plug#begin('~/.vim/plugged')
+
+if has('python') || has('python3')
+  Plug 'powerline/powerline', {'rtp': 'powerline/bindings/vim' }
+endif
+
+Plug 'junegunn/seoul256.vim'
+
+Plug 'tpope/vim-sensible'
+Plug 'editorconfig/editorconfig-vim'
+
+Plug 'Shougo/vimproc.vim'
+
+Plug 'asciidoc/vim-asciidoc'
+
+Plug 'leafgarland/typescript-vim'
+Plug 'jason0x43/vim-js-indent'
+Plug 'Quramy/tsuquyomi'
+
+call plug#end()
+
+syntax enable
+
+try
+  colorscheme seoul256
+catch /^Vim\%((\a\+)\)\=:E185/
+endtry
+
+set number
+
+autocmd BufNewFile,BufRead *.{ts,tsx} set filetype=typescript
