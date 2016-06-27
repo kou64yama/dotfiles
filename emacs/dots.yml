@@ -1,0 +1,7 @@
+description: Emacs dotfiles
+install:
+  file:
+    .emacs.d/Cask: Cask
+    .emacs.d/init.el: init.el
+    .emacs.d/lisp/: lisp/*.el
+    .emacs.d/site-lisp/: site-lisp/*.el

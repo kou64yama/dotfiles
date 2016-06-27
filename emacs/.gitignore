@@ -1,0 +1,8 @@
+*
+!.gitignore
+!Cask
+!init.el
+!lisp/
+!lisp/*
+!site-lisp/
+!site-lisp/*
