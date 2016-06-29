@@ -7,27 +7,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(defun find-directory (&rest list)
-  "Find directory from LIST."
-  (let ((head (car list)))
-    (if (or (eq head nil) (file-directory-p head)) head
-      (apply 'find-directory (cdr list)))))
-
-(defun find-directory-list (&rest list)
-  "Filter directories from LIST."
-  (let ((head (car list))
-        (tail (cdr list)))
-    (cond ((eq head nil) nil)
-          ((file-directory-p head)
-           (cons head (apply 'find-directory-list (cdr list))))
-          (t (apply 'find-directory-list (cdr list))))))
-
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
 (let ((installed (locate-user-emacs-file "installed")))
   (unless (file-exists-p installed)
     (let ((python (or (executable-find "python2")
+                      (executable-find "python2.7")
+                      (executable-find "python2.6")
                       (executable-find "python")))
           (buf (get-buffer-create "*Cask*")))
       (cd user-emacs-directory)
@@ -41,7 +28,12 @@
 (require 'cask "~/.cask/cask.el" t)
 (cask-initialize)
 
-(require 'use-package)
+(eval-when-compile
+  (require 'cl)
+  (require 'use-package)
+  (require 'f)
+  (require 'dash)
+  (dash-enable-font-lock))
 
 (use-package benchmark-init
   :if (getenv "EMACS_BENCHMARK_INIT")
@@ -70,13 +62,14 @@
 (use-package migemo
   :if (executable-find "cmigemo")
   :init (migemo-init)
-  :config (setq migemo-command (executable-find "cmigemo")
-                migemo-options '("-q" "--emacs")
-                migemo-user-dictionary nil
-                migemo-regex-dictionary nil
-                migemo-coding-system 'utf-8-unix
-                migemo-directory (find-directory
-                                  "/usr/share/migemo/migemo-dict")))
+  :config
+  (setq migemo-command (executable-find "cmigemo")
+        migemo-options '("-q" "--emacs")
+        migemo-user-dictionary nil
+        migemo-regex-dictionary nil
+        migemo-coding-system 'utf-8-unix
+        migemo-directory (-first 'file-directory-p
+                                 '("/usr/share/migemo/migemo-dict"))))
 
 ;; Appearance
 
@@ -117,10 +110,11 @@
 
 (use-package ido
   :init (ido-mode)
-  :config (setq ido-enable-flex-matching t
-                ido-everywhere t
-                ido-use-filename-at-point 'guess
-                ido-create-new-buffer 'always))
+  :config
+  (setq ido-enable-flex-matching t
+        ido-everywhere t
+        ido-use-filename-at-point 'guess
+        ido-create-new-buffer 'always))
 
 (use-package ido-ubiquitous
   :init (add-hook 'ido-setup-hook 'ido-ubiquitous-mode))
@@ -239,10 +233,11 @@
 
 (use-package org
   :bind (("C-c a" . org-agenda))
-  :config (setq org-agenda-files (find-directory-list
-                                  "~/agenda"
-                                  "~/dropbox/agenda"
-                                  "~/dropbox/public/agenda")))
+  :config
+  (setq org-agenda-files (-filter 'file-exists-p
+                                  '("~/agenda"
+                                    "~/dropbox/agenda"
+                                    "~/dropbox/public/agenda"))))
 
 (use-package org-autolist
   :init (add-hook 'org-mode-hook 'org-autolist-mode)
@@ -285,7 +280,8 @@
 
 (use-package go-mode
   :config
-  (setq gofmt-command "goimports")
+  (let ((command (executable-find "goimports")))
+    (when command (setq gofmt-command command)))
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'go-eldoc-setup))
 
@@ -297,7 +293,7 @@
                   (lambda ()
                     (add-to-list 'company-backends 'company-go))))
 
-(when window-system
-  (load-if-exists (locate-user-emacs-file "window.el")))
+(when window-system (load-if-exists (locate-user-emacs-file "window.el")))
+(load-if-exists (locate-user-emacs-file "local.el"))
 
 ;;; init.el ends here
