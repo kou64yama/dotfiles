@@ -18,7 +18,7 @@
                       (executable-find "python")))
           (buf (get-buffer-create "*Cask*")))
       (cd user-emacs-directory)
-      (call-process python nil buf nil "~/.cask/bin/cask")
+      (call-process python nil buf nil (expand-file-name "~/.cask/bin/cask"))
       (display-buffer buf))
     (write-region "" nil installed)))
 
@@ -61,6 +61,7 @@
 
 (use-package migemo
   :if (executable-find "cmigemo")
+  :commands (migemo-init)
   :init (migemo-init)
   :config
   (setq migemo-command (executable-find "cmigemo")
@@ -293,7 +294,15 @@
                   (lambda ()
                     (add-to-list 'company-backends 'company-go))))
 
-(when window-system (load-if-exists (locate-user-emacs-file "window.el")))
-(load-if-exists (locate-user-emacs-file "local.el"))
+(defun load-if-exists (path)
+  (when (file-exists-p path) (load path)))
+
+(when window-system
+  (-each (list "~/dropbox/public/emacs/window.el"
+               "~/dropbox/emacs/window.el"
+               (locate-user-emacs-file "window.el")) 'load-if-exists))
+(-each (list "~/dropbox/public/emacs/local.el"
+             "~/dropbox/emacs/local.el"
+             (locate-user-emacs-file "local.el")) 'load-if-exists)
 
 ;;; init.el ends here
