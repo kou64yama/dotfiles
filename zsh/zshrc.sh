@@ -7,6 +7,7 @@ _tmux_session_cmd() {
     [ ! -z "$TMUX" ] && return
     tmux list-sessions 2> /dev/null |\
         sed -e 's/:/ #/g' -e 's/^/tmux attach -t /g'
+    echo 'tmux'
 }
 
 _choose_cmd() {
