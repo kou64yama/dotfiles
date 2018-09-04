@@ -1,5 +1,0 @@
-description: Vim dotfiles
-install:
-  file:
-    .vimrc: vimrc
-    .vim/autoload/: plug.vim

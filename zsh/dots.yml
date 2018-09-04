@@ -1,5 +1,0 @@
-description: Zsh dotfiles
-install:
-  file:
-    .zshrc: zshrc.sh
-    .zprofile: zprofile.sh
