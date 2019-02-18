@@ -122,11 +122,9 @@ zstyle ':completion:*' menu select=2
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle ':completion:*:descriptions' format '%U%F{yellow}%d%f%u'
 
-fh() {
+__fzf-history() {
   LBUFFER=$(fc -l 1 | fzf +s --tac | sed "s/ *[0-9]* *//")
 }
-zle -N fh
-bindkey '^R' fh
 
 gitmoji() {
   if [[ ! -f "$HOME/.gitmojis.json" ]]; then
@@ -143,6 +141,8 @@ gitmoji() {
 
 zle -N gitmoji
 bindkey '^Xcc' gitmoji
+zle -N __fzf-history
+bindkey '^R' __fzf-history
 
 if [[ -d "$HOME/.nvm" ]]; then
   export NVM_DIR="$HOME/.nvm"
