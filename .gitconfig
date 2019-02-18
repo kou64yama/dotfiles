@@ -1,0 +1,5 @@
+[user]
+  email = kou64yama@gmail.com
+  name = YAMADA Koji
+[alias]
+	ignore = "!gi() { curl -sL https://www.gitignore.io/api/$@ ;}; gi"
