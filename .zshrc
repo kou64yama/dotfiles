@@ -126,26 +126,9 @@ __fzf-history() {
   LBUFFER=$(fc -l 1 | fzf +s --tac | sed "s/ *[0-9]* *//")
 }
 
-gitmoji() {
-  if [[ ! -f "$HOME/.gitmojis.json" ]]; then
-    curl -sL -o "$HOME/.gitmojis.json" \
-      https://raw.githubusercontent.com/carloscuesta/gitmoji/master/src/data/gitmojis.json
-  fi
-
-  local code=$(cat ~/.gitmojis.json \
-    | jq -r '.gitmojis | map(.code + " " + .description)[]' \
-    | fzf-tmux \
-    | sed -e 's/.*\(:.\+:\).*/\1/')
-  LBUFFER="${LBUFFER}${code}"
-}
-
-zle -N gitmoji
-bindkey '^Xcc' gitmoji
 zle -N __fzf-history
 bindkey '^R' __fzf-history
 
-if [[ -d "$HOME/.nvm" ]]; then
-  export NVM_DIR="$HOME/.nvm"
-  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
-  [[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"
+if [[ -d "$HOME/.zsh" ]]; then
+  for i in "$HOME/.zsh"/*.zsh; do [[ -f "$i" ]] && . "$i"; done
 fi
