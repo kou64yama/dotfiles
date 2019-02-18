@@ -93,7 +93,10 @@ case $TERM in
 esac
 
 if [[ $color == yes ]]; then
-  alias ls='ls --color=auto'
+  if ls --color >/dev/null 2>&1; then
+    alias ls='ls --color=auto'
+  fi
+
   alias grep='grep --color=auto'
   alias egrep='egrep --color=auto'
   alias fgrep='fgrep --color=auto'
