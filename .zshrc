@@ -5,6 +5,10 @@ if [[ $TERM == "dumb" ]]; then
   return
 fi
 
+if [[ "$-" == *l* ]] && [[ "$SHELL" == */zsh ]]; then
+  SHELL=$(which zsh)
+fi
+
 if [[ "x$TMUX" == x ]] && which tmux >/dev/null 2>&1; then
   cmd=($cmd 'tmux # new session')
   tmux list-sessions 2>/dev/null | while read i; do
