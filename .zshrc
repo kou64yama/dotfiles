@@ -5,7 +5,7 @@ if [[ $TERM == "dumb" ]]; then
   return
 fi
 
-if [[ "$-" == *l* ]] && [[ "$SHELL" == */zsh ]]; then
+if [[ "$-" == *l* ]] && [[ "$SHELL" != */zsh ]]; then
   SHELL=$(which zsh)
 fi
 
