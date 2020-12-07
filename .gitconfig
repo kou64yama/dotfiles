@@ -1,5 +1,17 @@
 [user]
   email = kou64yama@gmail.com
-  name = YAMADA Koji
+  name = Yamada Koji
+[core]
+  pager =
+[fetch]
+  prune = true
+[pull]
+  rebase = true
+[commit]
+  gpgsign = true
+[url "https://github.com/"]
+  insteadOf = "git@github.com:"
 [alias]
-	ignore = "!gi() { curl -sL https://www.gitignore.io/api/$@ ;}; gi"
+  ignore = "!gi() { curl -sL https://www.gitignore.io/api/$@ ;}; gi"
+[github]
+  user = kou64yama
