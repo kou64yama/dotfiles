@@ -9,10 +9,5 @@
 ## Installation
 
 ```bash
-git clone https://github.com/kou64yama/dotfiles.git ~/.dotfiles
-ln -s ~/.dotfiles/.zshrc ~/.zshrc
-ln -s ~/.dotfiles/.zprofile ~/.zprofile
-ln -s ~/.dotfiles/.tmux.conf ~/.tmux.conf
-ln -s ~/.dotfiles/.vimrc ~/.vimrc
-ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
+$ curl -sL https://github.com/kou64yama/dotfiles/raw/master/install.sh | bash
 ```
