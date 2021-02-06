@@ -1,9 +1,13 @@
 FROM homebrew/brew:3.0.0
 
 WORKDIR /work
-
-COPY . /work
-RUN bash /work/install.sh && rm -rf /work
+COPY . .
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends zsh \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && bash /work/install.sh \
+  && rm -rf /work
 
 WORKDIR /
-ENTRYPOINT [ "/bin/bash", "-l" ]
+CMD [ "/bin/zsh", "-l" ]
