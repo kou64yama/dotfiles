@@ -3,13 +3,17 @@
 {
   set -eo pipefail
 
-  trap 'rm -rf $temp' 0
-  temp=$(mktemp -d)
-
   if [[ -z "$DOTFILES" ]]; then
+    trap 'rm -rf $temp' 0
+    temp=$(mktemp -d)
+
     curl -fsSL "https://github.com/kou64yama/dotfiles/archive/${GITHUB_SHA:-main}.tar.gz" |
       tar --strip-components=1 -xz -C "$temp"
-    DOTFILES="$temp" exec bash "$temp/install.sh"
+
+    (
+      cd "$temp"
+      DOTFILES="$temp" exec bash install.sh
+    )
   fi
 
   : homebrew && {
