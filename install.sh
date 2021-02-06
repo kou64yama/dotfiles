@@ -9,7 +9,7 @@
   if [[ -z "$DOTFILES" ]]; then
     curl -fsSL "https://github.com/kou64yama/dotfiles/archive/${GITHUB_SHA:-main}.tar.gz" |
       tar --strip-components=1 -xz -C "$temp"
-    exec DOTFILES="$temp" bash "$temp/install.sh"
+    DOTFILES="$temp" exec bash "$temp/install.sh"
   fi
 
   : homebrew && {
