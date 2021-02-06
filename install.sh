@@ -10,10 +10,8 @@
     curl -fsSL "https://github.com/kou64yama/dotfiles/archive/${GITHUB_SHA:-main}.tar.gz" |
       tar --strip-components=1 -xz -C "$temp"
 
-    (
-      cd "$temp"
-      DOTFILES="$temp" exec bash install.sh
-    )
+    cd "$temp"
+    DOTFILES="$temp" exec bash install.sh
   fi
 
   : homebrew && {
