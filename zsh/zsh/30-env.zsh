@@ -1,3 +1,5 @@
+# shellcheck disable=SC2148
+
 if command -v anyenv >/dev/null 2>&1; then
   eval "$(anyenv init - zsh)"
 fi

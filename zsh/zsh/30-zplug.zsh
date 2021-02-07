@@ -1,3 +1,5 @@
+# shellcheck disable=SC2148
+
 zplug 'zsh-users/zaw'
 zplug 'zsh-users/zsh-completions'
 zplug 'zsh-users/zsh-autosuggestions'

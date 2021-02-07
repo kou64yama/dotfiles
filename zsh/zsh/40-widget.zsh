@@ -1,3 +1,5 @@
+# shellcheck disable=SC2148
+
 if zplug check 'b4b4r07/enhancd'; then
   export ENHANCD_FILTER=fzf-tmux
 fi
