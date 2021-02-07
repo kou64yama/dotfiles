@@ -23,12 +23,8 @@ for f in $(find "$HOME/.zsh" -maxdepth 1 -type f -name '2[0-9]-*.zsh' | sort); d
   source "$f"
 done
 
-if ! [[ -f "$HOME/.zplug/init.zsh" ]]; then
-  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-fi
-source "$HOME/.zplug/init.zsh"
-
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+export ZPLUG_HOME=$HOME/.zplug
+source "$(brew --prefix)/opt/zplug/init.zsh"
 
 # zplug packages
 for f in $(find "$HOME/.zsh" -maxdepth 1 -type f -name '3[0-9]-*.zsh' | sort); do
@@ -36,11 +32,7 @@ for f in $(find "$HOME/.zsh" -maxdepth 1 -type f -name '3[0-9]-*.zsh' | sort); d
 done
 
 if ! zplug check; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo
-    zplug install
-  fi
+  zplug install
 fi
 
 zplug load
