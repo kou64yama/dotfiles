@@ -67,10 +67,10 @@ EOF
 
   : Install homebrew formulae && {
     echo "==> Install homebrew formulae"
-    if [[ -z "$DOTFILES_NO_INSTALL" ]]; then
+    if [[ -z "$DOTFILES_SKIP_BREW_INSTALL" ]]; then
       brew bundle --no-lock
     else
-      echo "Skip because DOTFILES_NO_INSTALL is set."
+      echo "Skipping brew bundle"
     fi
   }
 }
