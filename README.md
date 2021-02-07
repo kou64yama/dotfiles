@@ -26,6 +26,7 @@ via Homebrew:
 [ripgrep](https://formulae.brew.sh/formula/ripgrep#default),
 [starship](https://formulae.brew.sh/formula/starship#default),
 [tmux](https://formulae.brew.sh/formula/tmux#default),
+[zip](https://formulae.brew.sh/formula/zip#default),
 [zplug](https://formulae.brew.sh/formula/zplug#default),
 [zsh](https://formulae.brew.sh/formula/zsh#default)
 
