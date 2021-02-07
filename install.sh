@@ -73,7 +73,7 @@ EOF
   : Post-install && {
     echo "==> Post-install"
 
-    anyenv install --init
+    anyenv install --init || true
 
     if ! [[ -d "$prefix/.tmux/plugins/tpm" ]]; then
       git clone https://github.com/tmux-plugins/tpm "$prefix/.tmux/plugins/tpm"
