@@ -8,7 +8,7 @@ fi
 mkdir -p "$HOME/.zsh"
 
 # bootstrap
-for f in $(find -s "$HOME/.zsh" -type f -depth 1 -name '1[0-9]-*.zsh'); do
+for f in $(find "$HOME/.zsh" -type f -depth 1 -name '1[0-9]-*.zsh' | sort); do
   source "$f"
 done
 
@@ -19,7 +19,7 @@ if [[ "$TERM" == dumb ]]; then
 fi
 
 # before zplug init
-for f in $(find -s "$HOME/.zsh" -type f -depth 1 -name '2[0-9]-*.zsh'); do
+for f in $(find "$HOME/.zsh" -type f -depth 1 -name '2[0-9]-*.zsh' | sort); do
   source "$f"
 done
 
@@ -31,7 +31,7 @@ source "$HOME/.zplug/init.zsh"
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 # zplug packages
-for f in $(find -s "$HOME/.zsh" -type f -depth 1 -name '3[0-9]-*.zsh'); do
+for f in $(find "$HOME/.zsh" -type f -depth 1 -name '3[0-9]-*.zsh' | sort); do
   source "$f"
 done
 
@@ -46,7 +46,7 @@ fi
 zplug load
 
 # after zplug loaded
-for f in $(find -s "$HOME/.zsh" -type f -depth 1 -name '[4-8][0-9]-*.zsh'); do
+for f in $(find "$HOME/.zsh" -type f -depth 1 -name '[4-8][0-9]-*.zsh' | sort); do
   source "$f"
 done
 
