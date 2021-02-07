@@ -72,5 +72,8 @@ EOF
 
   : Post install && {
     anyenv install --init
+
+    git clone https://github.com/tmux-plugins/tpm "$prefix/.tmux/plugins/tpm"
+    "$prefix/.tmux/plugins/tpm/bin/install_plugins"
   }
 }
