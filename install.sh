@@ -34,7 +34,7 @@ EOF
 
     mkdir "$sandbox/.zsh"
     cp zsh/zshrc.zsh "$sandbox/.zshrc"
-    cp zsh/zsh/*.zsh "$sandbox/.zsh"
+    cp zsh/[1-9][0-9]-*.zsh "$sandbox/.zsh"
 
     cp git/gitconfig "$sandbox/.gitconfig"
 

@@ -7,7 +7,7 @@
 ## Installation
 
 ```bash
-$ bash -c "$(curl -fsSL https://github.com/kou64yama/dotfiles/raw/main/install.sh)"
+$ curl -fsSL https://github.com/kou64yama/dotfiles/raw/main/install.sh | bash
 ```
 
 ## Packages
