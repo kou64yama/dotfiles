@@ -1,18 +1,24 @@
-FROM homebrew/brew:3.0.0
+FROM ubuntu:20.04
 
-USER linuxbrew
-COPY --chown=linuxbrew:linuxbrew Brewfile /home/linuxbrew/.Brewfile
-RUN brew bundle --global && brew autoremove && rm -rf "$(brew --cache)"
-
-ARG USER=kou64yama
-USER root
-RUN useradd -U -m "${USER}"
+ARG USER=user
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  curl sudo git ca-certificates build-essential \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  && update-ca-certificates \
+  && useradd -m -s /bin/bash "${USER}" \
+  && echo "${USER} ALL=(root) NOPASSWD:ALL" >"/etc/sudoers.d/${USER}" \
+  && chmod 0440 /etc/sudoers.d/user
 
 USER "${USER}"
-COPY --chown="${USER}:${USER}" . "/home/${USER}/work"
 WORKDIR "/home/${USER}/work"
-RUN DOTFILES=$PWD DOTFILES_SKIP_BREW_INSTALL=1 bash install.sh && rm -rf "/home/${USER}/work"
+
+COPY --chown="${USER}:${USER}" . .
+RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash \
+  && echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>"/home/${USER}/.profile" \
+  && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
+  && DOTFILES=$PWD bash install.sh \
+  && rm -rf "/home/${USER}/work" "$(brew --cache)"
 
 WORKDIR "/home/${USER}"
-ENV LANG=en_US.UTF-8
 CMD [ "/home/linuxbrew/.linuxbrew/bin/zsh", "-l" ]
