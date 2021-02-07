@@ -41,8 +41,12 @@ via [zplug](https://github.com/zplug/zplug):
 
 via [tpm](https://github.com/tmux-plugins/tpm):
 
-[tmux-plugins/tpm](https://github.com/tmux-plugins/tpm),
 [tmux-plugins/tmux-sensible](https://github.com/tmux-plugins/tmux-sensible),
 [tmux-plugins/tmux-pain-control](https://github.com/tmux-plugins/tmux-pain-control),
 [tmux-plugins/tmux-prefix-highlight](https://github.com/tmux-plugins/tmux-prefix-highlight),
 [leighmcculloch/tmux-colours-superhero](https://github.com/leighmcculloch/tmux-colours-superhero)
+
+via `install.sh`:
+
+[tmux-plugins/tpm](https://github.com/tmux-plugins/tpm),
+[SDKMAN](https://sdkman.io)
