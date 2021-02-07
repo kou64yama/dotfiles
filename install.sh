@@ -1,49 +1,76 @@
 #!/usr/bin/env bash
 
 {
-  download_url=${DOTFILES_DOWNLOAD_URL:-https://github.com/kou64yama/dotfiles/archive/master.tar.gz}
-  dotfiles_dir=${DOTFILES_DIR:-}
-  prefix=${PREFIX:-$HOME}
+  set -eo pipefail
 
-  trap 'rm -rf "$temp"' 0
-  temp=$(mktemp -d)
-  temp=$(realpath "$temp")
-
-  if [[ -z "$dotfiles_dir" ]]; then
-    dotfiles_dir=$temp/dotfiles
-    mkdir "$dotfiles_dir"
-    curl -#L "$download_url" | tar --strip-components=1 -xf - -C "$dotfiles_dir"
+  # Check Homebrew
+  if ! command -v brew >/dev/null 2>&1; then
+    cat >&2 <<EOF
+kou64yama/dotfiles requires Homebrew, but not installed it.
+See https://brew.sh
+EOF
+    exit 1
   fi
 
-  sandbox_dir=$temp/sandbox
-  mkdir "$sandbox_dir"
+  trap 'rm -rf $temp' 0
+  temp=$(mktemp -d)
 
-  dinst() {
-    local dest=$sandbox_dir/$1 src=$dotfiles_dir/$2
+  if [[ -z "$DOTFILES" ]]; then
+    tarball=https://github.com/kou64yama/dotfiles/archive/${GITHUB_SHA:-main}.tar.gz
+    echo "==> Downloading $tarball"
+    curl -fsSL# "$tarball" | tar --strip-components=1 -xz -C "$temp"
 
-    dest=$(realpath "$dest")
-    if ! [[ "$dest" =~ ^$sandbox_dir/ ]]; then
-      echo "$dest: out of sandbox" >&2
-      exit 1
-    fi
+    cd "$temp"
+    DOTFILES="$temp" exec bash install.sh
+  else
+    cd "$DOTFILES"
+  fi
 
-    src=$(realpath "$src")
-    if ! [[ "$src" =~ ^$dotfiles_dir/ ]]; then
-      echo "$src: out of dotfiles" >&2
-      exit 1
-    fi
+  : Installing RC scripts into the sandbox && {
+    echo "==> Installing RC scripts into the sandbox"
 
-    cp "$src" "$dest"
+    sandbox=$temp/b
+    mkdir -p "$sandbox"
+
+    mkdir "$sandbox/.zsh"
+    cp zsh/zshrc.zsh "$sandbox/.zshrc"
+    cp zsh/[1-9][0-9]-*.zsh "$sandbox/.zsh"
+
+    cp git/gitconfig "$sandbox/.gitconfig"
+
+    cp tmux/tmux.conf "$sandbox/.tmux.conf"
+
+    mkdir "$sandbox/.ssh"
+    cp ssh/config "$sandbox/.ssh/config"
+
+    cp hyper/hyper.js "$sandbox/.hyper.js"
   }
 
-  dflush() {
-    rsync -rlpt "$sandbox_dir/" "$prefix/"
+  : Applying patch to RC scripts && {
+    echo "==> Applying patch to RC scripts"
+
+    prefix="${PREFIX:-$HOME}"
+
+    mkdir "$temp/a"
+    if [[ -f "$prefix/.dotfiles/sandbox.tgz" ]]; then
+      tar -xf "$prefix/.dotfiles/sandbox.tgz" -C "$temp/a"
+    fi
+
+    (
+      cd "$temp"
+      diff -urN a b | patch -p1 -u -d "$prefix" || true
+    )
+
+    mkdir -p "$prefix/.dotfiles"
+    tar -C "$temp/b" -cf "$prefix/.dotfiles/sandbox.tgz" .
   }
 
-  dinst .zshrc zsh/zshrc.zsh
-  dinst .tmux.conf tmux/tmux.conf
-  dinst .gitconfig git/gitconfig
-  dinst .hyper.js hyper/hyper.js
-
-  dflush
+  : Install homebrew formulae && {
+    echo "==> Install homebrew formulae"
+    if [[ -z "$DOTFILES_SKIP_BREW_INSTALL" ]]; then
+      brew bundle --no-lock
+    else
+      echo "Skipping brew bundle"
+    fi
+  }
 }
