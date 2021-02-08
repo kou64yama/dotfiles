@@ -67,10 +67,23 @@ EOF
 
   : Install homebrew formulae && {
     echo "==> Install homebrew formulae"
-    if [[ -z "$DOTFILES_SKIP_BREW_INSTALL" ]]; then
-      brew bundle --no-lock
-    else
-      echo "Skipping brew bundle"
+    brew bundle --no-lock
+  }
+
+  : Post-install && {
+    echo "==> Post-install"
+
+    anyenv install --init || true
+
+    if ! [[ -d "$prefix/.tmux/plugins/tpm" ]]; then
+      git clone https://github.com/tmux-plugins/tpm "$prefix/.tmux/plugins/tpm"
+      "$prefix/.tmux/plugins/tpm/bin/install_plugins"
+    fi
+
+    if ! [[ -f "$prefix/.sdkman/bin/sdkman-init.sh" ]]; then
+      curl -s "https://get.sdkman.io" | bash
+      # shellcheck source=/dev/null
+      source "$prefix/.sdkman/bin/sdkman-init.sh"
     fi
   }
 }
