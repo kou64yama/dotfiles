@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && update-ca-certificates \
   && useradd -m -s /bin/bash "${USER}" \
   && echo "${USER} ALL=(root) NOPASSWD:ALL" >"/etc/sudoers.d/${USER}" \
-  && chmod 0440 /etc/sudoers.d/user
+  && chmod 0440 "/etc/sudoers.d/${USER}"
 
 USER "${USER}"
 WORKDIR "/home/${USER}/work"
