@@ -36,7 +36,7 @@ EOF
     cp zsh/zshrc.zsh "$sandbox/.zshrc"
     cp zsh/[1-9][0-9]-*.zsh "$sandbox/.zsh"
 
-    cp git/gitconfig "$sandbox/.gitconfig"
+    cp git/git.config "$sandbox/.gitconfig"
 
     cp tmux/tmux.conf "$sandbox/.tmux.conf"
 
