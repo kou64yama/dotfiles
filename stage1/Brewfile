@@ -11,9 +11,13 @@ brew "exa"
 brew "fd"
 brew "fzf"
 brew "git"
+brew "gnupg"
 brew "ripgrep"
 brew "starship"
-brew "tmux"
 brew "zip"
 brew "zplug"
 brew "zsh"
+
+if OS.mac?
+  brew "pinentry-mac"
+end

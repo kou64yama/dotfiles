@@ -7,7 +7,7 @@
 ## Installation
 
 ```bash
-$ curl -fsSL https://github.com/kou64yama/dotfiles/raw/main/install.sh | bash
+$ curl -fsSL https://github.com/kou64yama/dotfiles/raw/main/bootstrap.sh | bash
 ```
 
 ## Packages
@@ -25,7 +25,6 @@ via Homebrew:
 [git](https://formulae.brew.sh/formula/git#default),
 [ripgrep](https://formulae.brew.sh/formula/ripgrep#default),
 [starship](https://formulae.brew.sh/formula/starship#default),
-[tmux](https://formulae.brew.sh/formula/tmux#default),
 [zip](https://formulae.brew.sh/formula/zip#default),
 [zplug](https://formulae.brew.sh/formula/zplug#default),
 [zsh](https://formulae.brew.sh/formula/zsh#default)
@@ -40,14 +39,6 @@ via [zplug](https://github.com/zplug/zplug):
 [zsh-users/zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting),
 [b4b4r07/enhancd](https://github.com/b4b4r07/enhancd)
 
-via [tpm](https://github.com/tmux-plugins/tpm):
-
-[tmux-plugins/tmux-sensible](https://github.com/tmux-plugins/tmux-sensible),
-[tmux-plugins/tmux-pain-control](https://github.com/tmux-plugins/tmux-pain-control),
-[tmux-plugins/tmux-prefix-highlight](https://github.com/tmux-plugins/tmux-prefix-highlight),
-[leighmcculloch/tmux-colours-superhero](https://github.com/leighmcculloch/tmux-colours-superhero)
-
 via `install.sh`:
 
-[tmux-plugins/tpm](https://github.com/tmux-plugins/tpm),
 [SDKMAN](https://sdkman.io)

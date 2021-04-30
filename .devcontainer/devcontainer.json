@@ -1,0 +1,22 @@
+{
+  "name": "Existing Dockerfile",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder}/.cache,target=/home/linuxbrew/.cache/Homebrew,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/taps,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,type=bind,consistency=cached"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/home/linuxbrew/.linuxbrew/bin/zsh"
+  },
+  "extensions": [
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-docker",
+    "foxundermoon.shell-format",
+    "timonwong.shellcheck"
+  ],
+  "remoteUser": "linuxbrew"
+}

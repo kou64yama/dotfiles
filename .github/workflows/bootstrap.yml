@@ -1,0 +1,7 @@
+name: Test bootstrap script
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: bash -c "$(curl -fsSL https://github.com/kou64yama/dotfiles/raw/$GITHUB_SHA/bootstrap.sh)"

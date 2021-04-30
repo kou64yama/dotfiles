@@ -1,6 +1,0 @@
-IdentityFile      ~/.ssh/store/%h.pem
-ControlMaster     auto
-ControlPath       ~/.ssh/cp/%C
-
-Host *.compute.amazonaws.com
-  IdentityFile    ~/.ssh/store/compute.amazonaws.com.pem
