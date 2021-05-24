@@ -9,10 +9,10 @@ module.exports = {
     updateChannel: "stable",
 
     // default font size in pixels for all tabs
-    fontSize: 13,
+    fontSize: 12,
 
     // font family with optional fallbacks
-    fontFamily: '"Fira Code", "Migu 2M", "Noto Emoji", monospace',
+    fontFamily: '"FiraCode Nerd Font", "Migu 2M", "Noto Emoji", monospace',
 
     // default font weight: 'normal' or 'bold'
     fontWeight: "normal",
