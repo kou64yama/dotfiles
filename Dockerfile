@@ -7,7 +7,7 @@ RUN \
   --mount=type=cache,target=/var/cache/apt/archives \
   apt update \
   && apt install -y --no-install-recommends tzdata language-pack-en \
-  && apt install -y --no-install-recommends curl ca-certificates sudo git build-essential unzip \
+  && apt install -y --no-install-recommends curl ca-certificates sudo git build-essential unzip zlib1g-dev \
   && update-ca-certificates \
   && groupadd -g 1000 linuxbrew \
   && useradd -l -m -s /bin/bash -u 1000 -g 1000 linuxbrew \
