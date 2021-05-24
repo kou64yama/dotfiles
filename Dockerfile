@@ -42,9 +42,6 @@ FROM base
 
 COPY --from=builder --chown=linuxbrew:linuxbrew /home/linuxbrew /home/linuxbrew
 
-COPY docker-entrypoint.sh /
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
-
 USER linuxbrew
 
 ENV HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
