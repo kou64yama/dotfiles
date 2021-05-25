@@ -1,5 +1,3 @@
-# shellcheck disable=SC2148
-
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # zstyle ':completion:*:processes' command 'ps -au$USER'
 # zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=36=31'

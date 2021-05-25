@@ -1,24 +1,58 @@
-FROM ubuntu:20.04
+# syntax=docker/dockerfile:1.2
 
-ARG USER=user
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  curl sudo git ca-certificates build-essential \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
+FROM ubuntu:20.04 AS base
+
+RUN \
+  --mount=type=cache,target=/var/lib/apt/lists \
+  --mount=type=cache,target=/var/cache/apt/archives \
+  apt update \
+  && apt install -y --no-install-recommends tzdata language-pack-en \
+  && apt install -y --no-install-recommends curl ca-certificates sudo git build-essential unzip zlib1g-dev \
   && update-ca-certificates \
-  && useradd -m -s /bin/bash "${USER}" \
-  && echo "${USER} ALL=(root) NOPASSWD:ALL" >"/etc/sudoers.d/${USER}" \
-  && chmod 0440 "/etc/sudoers.d/${USER}"
+  && groupadd -g 1000 linuxbrew \
+  && useradd -l -m -s /bin/bash -u 1000 -g 1000 linuxbrew \
+  && echo "linuxbrew ALL=(root) NOPASSWD:ALL" >/etc/sudoers.d/linuxbrew \
+  && chmod 0440 /etc/sudoers.d/linuxbrew \
+  && apt autoremove
 
-USER "${USER}"
-WORKDIR "/home/${USER}/work"
+FROM base as builder
 
-COPY --chown="${USER}:${USER}" . .
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash \
-  && echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>"/home/${USER}/.profile" \
-  && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
-  && DOTFILES=$PWD bash install.sh \
-  && rm -rf "/home/${USER}/work" "$(brew --cache)"
+USER linuxbrew
+WORKDIR /workspace
 
-WORKDIR "/home/${USER}"
+RUN \
+  --mount=type=cache,target=/home/linuxbrew/.cache/Homebrew,uid=1000,gid=1000 \
+  --mount=type=cache,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,uid=1000,gid=1000 \
+  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+ENV PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
+
+COPY stage1 stage1
+RUN \
+  --mount=type=cache,target=/home/linuxbrew/.cache/Homebrew,uid=1000,gid=1000 \
+  --mount=type=cache,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,uid=1000,gid=1000 \
+  bash -x stage1/install.sh
+
+COPY stage2 stage2
+RUN bash -x stage2/install.sh
+
+COPY stage3 stage3
+RUN bash -x stage3/install.sh
+
+FROM base
+
+COPY --from=builder --chown=linuxbrew:linuxbrew /home/linuxbrew /home/linuxbrew
+
+USER linuxbrew
+
+ENV HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+ENV HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar
+ENV HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
+ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH:+:$PATH}
+ENV MANPATH=/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}
+ENV INFOPATH=/home/linuxbrew/.linuxbrew/share/info${INFOPATH:+:$INFOPATH}
+ENV TZ=UTC
+ENV LANG=en_US.UTF-8
+ENV SHELL=/home/linuxbrew/.linuxbrew/bin/zsh
+
+WORKDIR /home/linuxbrew
 CMD [ "/home/linuxbrew/.linuxbrew/bin/zsh", "-l" ]

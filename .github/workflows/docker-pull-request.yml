@@ -1,12 +1,7 @@
-name: Publish Docker image
-
-on:
-  push:
-    branches: [main]
-
+name: Deploy docker image on PR
+on: pull_request
 jobs:
   push_to_registry:
-    name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -24,4 +19,4 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          tags: kou64yama/dotfiles/dotfiles:latest
+          tags: kou64yama/dotfiles/dotfiles:pr${{ github.event.issue.number }}
