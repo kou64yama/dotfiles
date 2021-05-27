@@ -1,7 +1,5 @@
-eval "$(direnv hook zsh)"
-eval "$(anyenv init - zsh)"
+source "$(brew --prefix asdf)/asdf.sh"
 
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+eval "$(direnv hook zsh)"
 
 PATH="$HOME/bin${PATH:+:$PATH}"

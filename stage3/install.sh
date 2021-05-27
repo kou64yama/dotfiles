@@ -27,6 +27,8 @@ cp stage3/files/ssh/config "$work/b/.ssh/config"
 
 cp stage3/files/hyper/hyper.js "$work/b/.hyper.js"
 
+cp stage3/files/asdf/asdfrc "$work/b/.asdfrc"
+
 (
   cd "$work"
   if ! diff -urN a b >diff.patch; then
