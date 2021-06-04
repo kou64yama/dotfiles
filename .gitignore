@@ -1,5 +1,5 @@
-.cache/*
-!.cache/.gitkeep
-
 taps/*
 !taps/.gitkeep
+
+.zplug/*
+!.zplug/.gitkeep

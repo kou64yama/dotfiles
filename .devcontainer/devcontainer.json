@@ -5,8 +5,8 @@
     "dockerfile": "../Dockerfile"
   },
   "mounts": [
-    "source=${localWorkspaceFolder}/.cache,target=/home/linuxbrew/.cache/Homebrew,type=bind,consistency=cached",
-    "source=${localWorkspaceFolder}/taps,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder}/taps,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.zplug,target=/home/dotfiles/.zplug,type=bind,consistency=cached"
   ],
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"
@@ -20,5 +20,5 @@
     "rebornix.ruby",
     "castwide.solargraph"
   ],
-  "remoteUser": "linuxbrew"
+  "remoteUser": "dotfiles"
 }
