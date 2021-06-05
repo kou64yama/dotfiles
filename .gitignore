@@ -3,3 +3,6 @@ taps/*
 
 .zplug/*
 !.zplug/.gitkeep
+
+.emacs.d/*
+!.emacs.d/.gitkeep

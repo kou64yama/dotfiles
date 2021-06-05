@@ -6,7 +6,8 @@
   },
   "mounts": [
     "source=${localWorkspaceFolder}/taps,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,type=bind,consistency=cached",
-    "source=${localWorkspaceFolder}/.zplug,target=/home/dotfiles/.zplug,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder}/.zplug,target=/home/dotfiles/.zplug,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.emacs.d,target=/home/dotfiles/.emacs.d/local,type=bind,consistency=cached"
   ],
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"
@@ -18,7 +19,8 @@
     "foxundermoon.shell-format",
     "timonwong.shellcheck",
     "rebornix.ruby",
-    "castwide.solargraph"
+    "castwide.solargraph",
+    "mattn.lisp"
   ],
   "remoteUser": "dotfiles"
 }

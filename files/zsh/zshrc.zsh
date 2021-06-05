@@ -1,10 +1,7 @@
-ZSHRC_DEBUG=1
-
 debug() {
-  if [[ -z "$ZSHRC_DEBUG" ]]; then
-    return
+  if [[ "$-" = *i* ]]; then
+    echo "$@" >&2
   fi
-  echo "$@" >&2
 }
 
 # Load the level 0 scripts (at any time)
