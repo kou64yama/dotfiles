@@ -32,6 +32,7 @@ jobs:
           load: true
           target: stage1
           tags: ghcr.io/kou64yama/dotfiles:stage1
+          cache-from: type=registry,ref=ghcr.io/kou64yama/dotfiles:stage3
 
       - name: Build (stage2)
         uses: docker/build-push-action@v2
@@ -39,6 +40,7 @@ jobs:
           load: true
           target: stage2
           tags: ghcr.io/kou64yama/dotfiles:stage2
+          cache-from: type=registry,ref=ghcr.io/kou64yama/dotfiles:stage3
 
       - name: Build (stage3)
         uses: docker/build-push-action@v2
@@ -46,12 +48,14 @@ jobs:
           load: true
           target: stage3
           tags: ghcr.io/kou64yama/dotfiles:stage3
+          cache-from: type=registry,ref=ghcr.io/kou64yama/dotfiles:stage3
 
       - name: Build
         uses: docker/build-push-action@v2
         with:
           load: true
           tags: ghcr.io/kou64yama/dotfiles:latest
+          cache-from: type=registry,ref=ghcr.io/kou64yama/dotfiles:stage3
 
       - name: List images
         run: |
@@ -80,6 +84,7 @@ jobs:
           push: true
           target: stage3
           tags: ghcr.io/kou64yama/dotfiles:stage3
+          cache-to: type=registry,ref=ghcr.io/kou64yama/dotfiles:stage3,mode=max
 
       - name: Publish
         uses: docker/build-push-action@v2
