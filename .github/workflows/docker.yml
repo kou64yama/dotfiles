@@ -55,7 +55,10 @@ jobs:
 
       - name: Test
         run: |
-          docker image ls
+          docker image ls ghcr.io/kou64yama/dotfiles
+          docker run --rm ghcr.io/kou64yama/dotfiles:stage1 /bin/true
+          docker run --rm ghcr.io/kou64yama/dotfiles:stage2 /bin/true
+          docker run --rm ghcr.io/kou64yama/dotfiles:stage3 /bin/true
           docker run --rm ghcr.io/kou64yama/dotfiles:latest /bin/true
 
       - name: Publish (stage1)
