@@ -11,7 +11,7 @@ ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
 RUN apt update \
-  && apt install -y --no-install-recommends tzdata language-pack-en \
+  && apt install -y --no-install-recommends tzdata language-pack-en sudo \
   && apt autoremove \
   && rm -r /var/lib/apt/lists \
   && groupadd -g ${USER_GID} ${USERNAME} \
@@ -41,7 +41,6 @@ RUN apt update
 RUN apt install -y --no-install-recommends \
   curl \
   ca-certificates \
-  sudo \
   git \
   build-essential \
   unzip \
