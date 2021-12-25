@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-cd "$(dirname "$(readlink -f "$0")")"
+cd "${0%/*}"
 
 trap 'rm -rf "$work"' 0
 work=$(mktemp -d)
@@ -22,12 +22,12 @@ cp files/zsh/[0-9][0-9]-*.zsh "$work"/b/.zsh.d
 # Install OpenSSH settings
 mkdir -p "$work"/b/.ssh/{store,cp,hosts.d}
 cp files/ssh/config "$work"/b/.ssh/config
-echo '# keep' | tee "$work"/b/.ssh/{store,cp,hosts.d}/.keep
+echo '# keep' | tee "$work"/b/.ssh/{store,cp,hosts.d}/.keep >/dev/null
 
 # Install Emacs settings
 mkdir -p "$work"/b/.emacs.d/local
 cp files/emacs/init.el "$work"/b/.emacs.d/init.el
-echo '# keep' | tee "$work"/b/.emacs.d/local/.keep
+echo '# keep' | tee "$work"/b/.emacs.d/local/.keep >/dev/null
 
 # Applying
 (

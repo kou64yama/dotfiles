@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-cd "$(dirname "$(readlink -f "$0")")"
+cd "${0%/*}"
 
 trap 'rm -rf "$work"' 0
 work=$(mktemp -d)
