@@ -17,5 +17,6 @@ EOF
 
   tarball=https://github.com/kou64yama/dotfiles/archive/${GITHUB_SHA:-main}.tar.gz
   curl -fsSL --progress-bar "$tarball" | tar --strip-components=1 -xz
-  /usr/bin/env bash install.sh
+
+  exec ./install.sh
 }
