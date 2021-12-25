@@ -12,8 +12,11 @@ if ! git config --global user.email >/dev/null; then
   read -r git_user_email || true
 fi
 
-/usr/bin/env bash stage1.sh
-/usr/bin/env bash stage2.sh
+brew bundle -v --no-lock --file ./stage2/Brewfile
+./stage2/install.sh
+
+brew bundle -v --no-lock --file ./stage3/Brewfile
+./stage3/install.sh
 
 if [[ -n "$git_user_name" ]]; then
   git config --global user.name "$git_user_name"

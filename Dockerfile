@@ -1,75 +1,83 @@
-# syntax=docker/dockerfile:1.2
+# stage1
+# ------------------------------------------------------------------------------
 
-FROM ubuntu:20.04 AS base
+ARG VARIANT=20.04
+FROM ubuntu:${VARIANT} AS stage1
 
-RUN --mount=type=cache,target=/var/lib/apt/lists \
-  apt update \
+LABEL maintainer="Yamada Koji <kou64yama@gmail.com>"
+
+RUN apt update \
   && apt install -y --no-install-recommends tzdata language-pack-en \
   && apt install -y --no-install-recommends curl ca-certificates sudo git build-essential unzip zlib1g-dev \
   && apt autoremove \
-  && update-ca-certificates
+  && update-ca-certificates \
+  && rm -r /var/lib/apt/lists
 
-FROM base AS stage0
+ENV TZ=UTC
+ENV LANG=en_US.UTF-8
+
+COPY docker-entrypoint.sh /
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 ARG USERNAME=dotfiles
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 RUN groupadd -g ${USER_GID} ${USERNAME} \
   && useradd -lm -s /bin/bash -g ${USER_GID} -u ${USER_UID} ${USERNAME} \
-  && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" >/etc/sudoers.d/${USERNAME} \
+  && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" >>/etc/sudoers.d/${USERNAME} \
   && chmod 0440 /etc/sudoers.d/${USERNAME}
-
-FROM base AS stage1
-
-RUN groupadd -g 1000 linuxbrew \
-  && useradd -lm -s /bin/bash -g 1000 -u 1001 linuxbrew \
-  && echo "linuxbrew ALL=(root) NOPASSWD:ALL" >/etc/sudoers.d/linuxbrew \
-  && chmod 0440 /etc/sudoers.d/linuxbrew
-USER linuxbrew
-
-RUN \
-  --mount=type=cache,target=/home/linuxbrew/.cache/Homebrew,uid=1000,gid=1000 \
-  --mount=type=cache,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,uid=1000,gid=1000 \
-  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
-ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
-
-WORKDIR /workspace
-COPY stage1.sh Brewfile ./
-RUN \
-  --mount=type=cache,target=/home/linuxbrew/.cache/Homebrew,uid=1000,gid=1000 \
-  --mount=type=cache,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,uid=1000,gid=1000 \
-  bash -x stage1.sh
-
-FROM stage0 AS stage2
 
 USER ${USERNAME}
 
-COPY --from=stage1 --chown=${USERNAME}:${USERNAME} \
-  /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
+# stage2
+# ------------------------------------------------------------------------------
+
+FROM stage1 AS stage2
+
+RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
 
 WORKDIR /workspace
-COPY stage2.sh .
-COPY files files
-RUN bash -x stage2.sh
 
-FROM stage0
-LABEL maintainer="Yamada Koji <kou64yama@gmail.com>"
-
-COPY --from=stage2 --chown=${USERNAME}:${USERNAME} \
-  /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
-COPY --from=stage2 --chown=${USERNAME}:${USERNAME} \
-  /home/${USERNAME} /home/${USERNAME}
-
-ENV HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
-ENV HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar
-ENV HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
-ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
-ENV MANPATH=/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}
-ENV INFOPATH=/home/linuxbrew/.linuxbrew/share/info${INFOPATH:+:$INFOPATH}
-ENV TZ=UTC
-ENV LANG=en_US.UTF-8
-ENV SHELL=/home/linuxbrew/.linuxbrew/bin/zsh
+COPY --chown=${USERNAME}:${USERNAME} stage2 .
+RUN brew bundle -v --no-lock --file ./Brewfile
+RUN ./install.sh
 
 WORKDIR /home/${USERNAME}
-CMD [ "/home/linuxbrew/.linuxbrew/bin/zsh", "-l" ]
+RUN rm -r /workspace
+
+ENV SHELL=/home/linuxbrew/.linuxbrew/bin/zsh
+
+# stage3
+# ------------------------------------------------------------------------------
+
+FROM stage2 AS stage3
+
+WORKDIR /workspace
+
+COPY --chown=${USERNAME}:${USERNAME} stage3 .
+RUN brew bundle -v --no-lock --file ./Brewfile
+RUN ./install.sh
+
+WORKDIR /home/${USERNAME}
+RUN rm -r /workspace
+
+# purge
+# ------------------------------------------------------------------------------
+
+FROM stage3 AS purge
+
+RUN rm -r /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/*
+
+# runtime
+# ------------------------------------------------------------------------------
+
+FROM stage1
+
+COPY --from=purge --chown=${USERNAME}:${USERNAME} /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
+COPY --from=purge --chown=${USERNAME}:${USERNAME} /home/${USERNAME} /home/${USERNAME}
+
+ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
+
+USER ${USERNAME}
+WORKDIR /home/${USERNAME}

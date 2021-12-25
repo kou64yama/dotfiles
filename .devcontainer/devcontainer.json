@@ -2,25 +2,21 @@
   "name": "Existing Dockerfile",
   "build": {
     "context": "..",
-    "dockerfile": "../Dockerfile"
+    "dockerfile": "../Dockerfile",
+    "target": "stage2",
+    "args": {
+      "VARIANT": "20.04"
+    }
   },
-  "mounts": [
-    "source=${localWorkspaceFolder}/taps,target=/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps,type=bind,consistency=cached",
-    "source=${localWorkspaceFolder}/.zplug,target=/home/dotfiles/.zplug,type=bind,consistency=cached",
-    "source=${localWorkspaceFolder}/.emacs.d,target=/home/dotfiles/.emacs.d/local,type=bind,consistency=cached"
-  ],
   "settings": {
-    "terminal.integrated.defaultProfile.linux": "bash"
+    "terminal.integrated.defaultProfile.linux": "zsh"
   },
   "extensions": [
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "ms-azuretools.vscode-docker",
     "foxundermoon.shell-format",
-    "timonwong.shellcheck",
-    "rebornix.ruby",
-    "castwide.solargraph",
-    "mattn.lisp"
+    "timonwong.shellcheck"
   ],
   "remoteUser": "dotfiles"
 }

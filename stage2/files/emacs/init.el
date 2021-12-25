@@ -390,9 +390,7 @@
 ;; Language
 ;; ---------------------------------------------------------------------
 
-(leaf gitconfig-mode :ensure t)
-(leaf gitignore-mode :ensure t)
-(leaf gitattributes-mode :ensure t)
+(leaf git-modes :ensure t)
 (leaf ssh-config-mode :ensure t)
 
 ;; ShellScript
