@@ -10,6 +10,5 @@ tap "homebrew/services"
 brew "emacs" unless OS.mac?
 brew "git"
 brew "gnupg"
-brew "openssh"
 brew "starship"
 brew "zsh"

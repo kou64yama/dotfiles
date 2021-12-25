@@ -62,10 +62,10 @@ RUN ./install.sh
 WORKDIR /home/${USERNAME}
 RUN sudo rm -r /workspace
 
-# purge
+# slim
 # ------------------------------------------------------------------------------
 
-FROM stage3 AS purge
+FROM stage3 AS slim
 
 RUN rm -r /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/*
 
@@ -74,8 +74,8 @@ RUN rm -r /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/*
 
 FROM stage1
 
-COPY --from=purge --chown=${USERNAME}:${USERNAME} /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
-COPY --from=purge --chown=${USERNAME}:${USERNAME} /home/${USERNAME} /home/${USERNAME}
+COPY --from=slim --chown=${USERNAME}:${USERNAME} /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
+COPY --from=slim --chown=${USERNAME}:${USERNAME} /home/${USERNAME} /home/${USERNAME}
 
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
 
