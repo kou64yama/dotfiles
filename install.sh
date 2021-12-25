@@ -2,6 +2,8 @@
 
 set -eo pipefail
 
+cd "${0%/*}"
+
 if ! git config --global user.name >/dev/null; then
   echo -n 'Git User Name: ' >&2
   read -r git_user_name || true
