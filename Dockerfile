@@ -68,6 +68,7 @@ RUN sudo rm -r /workspace
 FROM stage3 AS slim
 
 RUN rm -r /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/*
+RUN rm -r /home/${USERNAME}/.cache
 
 # runtime
 # ------------------------------------------------------------------------------
