@@ -44,7 +44,7 @@ RUN brew bundle -v --no-lock --file ./Brewfile
 RUN ./install.sh
 
 WORKDIR /home/${USERNAME}
-RUN rm -r /workspace
+RUN sudo rm -r /workspace
 
 ENV SHELL=/home/linuxbrew/.linuxbrew/bin/zsh
 
@@ -60,7 +60,7 @@ RUN brew bundle -v --no-lock --file ./Brewfile
 RUN ./install.sh
 
 WORKDIR /home/${USERNAME}
-RUN rm -r /workspace
+RUN sudo rm -r /workspace
 
 # purge
 # ------------------------------------------------------------------------------
