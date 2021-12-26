@@ -1,8 +1,0 @@
-taps/*
-!taps/.gitkeep
-
-.zplug/*
-!.zplug/.gitkeep
-
-.emacs.d/*
-!.emacs.d/.gitkeep
