@@ -23,7 +23,6 @@ brew "ripgrep"
 brew "tig"
 brew "tmux"
 brew "zip"
-brew "zplug"
 
 # Homebrew Cask
 if OS.mac?

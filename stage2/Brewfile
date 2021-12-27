@@ -11,4 +11,5 @@ brew "emacs" unless OS.mac?
 brew "git"
 brew "gnupg"
 brew "starship"
+brew "zplug"
 brew "zsh"
