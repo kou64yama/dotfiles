@@ -64,7 +64,7 @@ setopt hist_ignore_space
 if command -v exa >/dev/null 2>&1; then
   alias ls='exa -bgh --icons --sort=name --git --time-style=long-iso'
 else
-  alias ls='ls --colors=auto'
+  alias ls='ls --color=auto'
 fi
 
 if command -v bat >/dev/null 2>&1; then
