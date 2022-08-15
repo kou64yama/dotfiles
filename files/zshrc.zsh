@@ -52,6 +52,10 @@ zi wait lucid light-mode for \
   src'asdf.sh' \
   @asdf-vm/asdf
 
+zi wait lucid light-mode for \
+  sbin'kring' \
+  kou64yama/kring
+
 zicompinit
 
 export HISTSIZE=10000
