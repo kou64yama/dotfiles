@@ -88,3 +88,7 @@ fi
 if command -v emacsclient >/dev/null 2>&1; then
   alias emacs='emacsclient -a "" -c'
 fi
+
+if [[ -d "$HOME/bin" ]]; then
+  PATH=$HOME/bin:$PATH
+fi
