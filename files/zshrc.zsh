@@ -1,3 +1,5 @@
+PATH=/usr/local/bin:/usr/bin:/bin
+
 source "${ZI_HOME:-$HOME/.zi}"/bin/zi.zsh
 
 zi light-mode \
@@ -94,6 +96,4 @@ if command -v emacsclient >/dev/null 2>&1; then
   alias emacs='emacsclient -a "" -c'
 fi
 
-if [[ -d "$HOME/bin" ]]; then
-  PATH=$HOME/bin:$PATH
-fi
+PATH=$HOME/bin:$PATH
