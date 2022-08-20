@@ -1,8 +1,15 @@
+PATH=/usr/local/bin:/usr/bin:/bin
+
 source "${ZI_HOME:-$HOME/.zi}"/bin/zi.zsh
 
 zi light-mode \
   for z-shell/z-a-meta-plugins \
   @annexes
+
+zi lucid light-mode for \
+  sbin'bin/asdf -> asdf' \
+  src'asdf.sh' \
+  @asdf-vm/asdf
 
 zi lucid light-mode for as'null' from'gh-r' \
   atclone'
@@ -49,10 +56,6 @@ zi wait lucid light-mode for as'null' from'gh-r' \
   ajeetdsouza/zoxide
 
 zi wait lucid light-mode for \
-  src'asdf.sh' \
-  @asdf-vm/asdf
-
-zi wait lucid light-mode for \
   sbin'kring' \
   kou64yama/kring
 
@@ -93,6 +96,4 @@ if command -v emacsclient >/dev/null 2>&1; then
   alias emacs='emacsclient -a "" -c'
 fi
 
-if [[ -d "$HOME/bin" ]]; then
-  PATH=$HOME/bin:$PATH
-fi
+PATH=$HOME/bin:$PATH
