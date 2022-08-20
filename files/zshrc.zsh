@@ -4,6 +4,11 @@ zi light-mode \
   for z-shell/z-a-meta-plugins \
   @annexes
 
+zi lucid light-mode for \
+  sbin'bin/asdf -> asdf' \
+  src'asdf.sh' \
+  @asdf-vm/asdf
+
 zi lucid light-mode for as'null' from'gh-r' \
   atclone'
     ./starship init zsh > init.zsh;
@@ -47,10 +52,6 @@ zi wait lucid light-mode for as'null' from'gh-r' \
   sbin'zoxide' \
   src'init.zsh' \
   ajeetdsouza/zoxide
-
-zi wait lucid light-mode for \
-  src'asdf.sh' \
-  @asdf-vm/asdf
 
 zi wait lucid light-mode for \
   sbin'kring' \
