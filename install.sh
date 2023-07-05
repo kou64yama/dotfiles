@@ -42,8 +42,11 @@ success() {
 }
 
 dotinst() {
+  mkdir -p "$(dirname "$work_dir"/b/"$1")"
   cp "$2" "$work_dir"/b/"$1"
+
   if [[ ! -f "$work_dir"/a/"$1" ]] && [[ -f "$prefix"/"$1" ]]; then
+    mkdir -p "$(dirname "$work_dir"/a/"$1")"
     cp "$prefix"/"$1" "$work_dir"/a/"$1"
   fi
 }
@@ -69,7 +72,9 @@ fi
 trap 'rm -rf "$work_dir"; success' EXIT
 
 begin 'Installing ZI' && {
-  sh -c "$(curl -fsSL https://git.io/get-zi)" -- -i skip
+  # sh -c "$(curl -fsSL https://git.io/get-zi)" -- -i skip
+  # sh -c "$(curl -fsSL get.zshell.dev)" --
+  echo skip
 }
 
 begin 'Restoring current dotfiles' && {
@@ -87,6 +92,8 @@ begin 'Installing dotfiles into the sandbox' && {
 
   dotinst .zshrc files/zshrc.zsh
   dotinst .gitconfig files/gitconfig.ini
+  dotinst .config/alacritty/alacritty.yml files/alacritty.yml
+  dotinst .tmux.conf files/tmux.conf
 }
 
 begin 'Applying patch' && {

@@ -1,4 +1,4 @@
-PATH=/usr/local/bin:/usr/bin:/bin
+PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin
 
 source "${ZI_HOME:-$HOME/.zi}"/bin/zi.zsh
 
