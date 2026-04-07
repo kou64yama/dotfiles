@@ -2,138 +2,63 @@
 
 set -eo pipefail
 
-prefix=${PREFIX:-$HOME}
-dotfiles_home=${DOTFILES_HOME:-$HOME/.dotfiles}
-work_dir=$dotfiles_home/work
-history_dir=$dotfiles_home/history
-section=
-interactive=
-patch_file="$history_dir"/"$(date +%s | xargs printf %016x)".patch
+trap 'if [[ -n "$sandbox" ]]; then rm -rf "$sandbox"; fi' EXIT
 
-inf() {
-  echo "$*" >&2
-}
-
-err() {
-  echo "error: $*" >&2
-}
-
-begin() {
-  if [[ -n "$section" ]]; then
-    printf '\e[32;1m==> %s ... OK \e[m\n' "$section" >&2
-  fi
-
-  section=$1
-  printf '\e[34;1m==> %s ...\e[m\n' "$section" >&2
-}
-
-failure() {
-  if [[ -n "$section" ]]; then
-    printf '\e[31;1m==> %s ... Failed \e[m\n' "$section" >&2
-  fi
-  section=
-}
-
-success() {
-  if [[ -n "$section" ]]; then
-    printf '\e[32;1m==> %s ... OK \e[m\n' "$section" >&2
-  fi
-  section=
-}
-
-dotinst() {
-  mkdir -p "$(dirname "$work_dir"/b/"$1")"
-  cp "$2" "$work_dir"/b/"$1"
-
-  if [[ ! -f "$work_dir"/a/"$1" ]] && [[ -f "$prefix"/"$1" ]]; then
-    mkdir -p "$(dirname "$work_dir"/a/"$1")"
-    cp "$prefix"/"$1" "$work_dir"/a/"$1"
-  fi
-}
+sandbox=$(mktemp -d)
+files=(
+  '0644 .gitconfig                                files/git/gitconfig.ini'
+  '0644 .zshrc                                    files/zsh/zshrc.zsh'
+  '0644 .zimrc                                    files/zsh/zimrc.zsh'
+  '0644 .tmux.conf                                files/tmux/tmux.conf'
+  '0644 .config/nvim/init.lua                     files/nvim/init.lua'
+  '0644 .config/nvim/lua/config/lazy.lua          files/nvim/lua/config/lazy.lua'
+  '0644 .config/nvim/lua/plugins/editorconfig.lua files/nvim/lua/plugins/editorconfig.lua'
+  '0644 .config/nvim/lua/plugins/statusline.lua   files/nvim/lua/plugins/statusline.lua'
+)
+interactive=no
 
 while getopts i OPT; do
   case $OPT in
-  i) interactive=yes ;;
-  *) ;;
+    i) interactive=yes ;;
   esac
 done
 shift $((OPTIND - 1))
 
-mkdir -p "$dotfiles_home" "$history_dir"
-
-if ! mkdir "$work_dir" 2>/dev/null; then
-  err "directory '$work_dir' already exists"
-  cat >&2 <<EOF
-Another process is currently installing dotfiles. If not, delete the
-'$work_dir' and re-run.
-EOF
-  exit 1
+mkdir -p "$sandbox/a"
+if [[ -f "$HOME/.local/var/dotfiles.tgz" ]]; then
+  tar -xf "$HOME/.local/var/dotfiles.tgz" -C "$sandbox/a"
 fi
-trap 'rm -rf "$work_dir"; success' EXIT
 
-begin 'Installing ZI' && {
-  # sh -c "$(curl -fsSL https://git.io/get-zi)" -- -i skip
-  # sh -c "$(curl -fsSL get.zshell.dev)" --
-  echo skip
-}
-
-begin 'Restoring current dotfiles' && {
-  mkdir -p "$work_dir"/a
-  if [[ -f "$dotfiles_home"/current.tgz ]]; then
-    inf "Extract '$dotfiles_home/current.tgz' to '$work_dir/a'."
-    tar -xf "$dotfiles_home"/current.tgz -C "$work_dir"/a
-  else
-    inf "No '$dotfiles_home/current.tgz' exists."
+mkdir -p "$sandbox/b"
+for file in "${files[@]}"; do
+  IFS=' ' read -r mode path src <<<"$file"
+  dir=$(dirname "$path")
+  if [[ ! -d "$sandbox/b/$dir" ]]; then
+    mkdir -p "$sandbox/b/$dir"
   fi
-}
+  cp "$src" "$sandbox/b/$path"
+  chmod "$mode" "$sandbox/b/$path"
+done
 
-begin 'Installing dotfiles into the sandbox' && {
-  mkdir -p "$work_dir"/b
+if (cd "$sandbox" && diff -uNr a b >"$sandbox/patch.diff"); then
+  echo "No diff found." >&2
+  exit 0
+fi
 
-  dotinst .zshrc files/zshrc.zsh
-  dotinst .gitconfig files/gitconfig.ini
-  dotinst .config/alacritty/alacritty.yml files/alacritty.yml
-  dotinst .tmux.conf files/tmux.conf
-}
+if [[ "$interactive" == yes ]]; then
+  cat "$sandbox/patch.diff" >&2
+  echo >&2
+  echo -n "Apply? (y/N): " >&2
+  read -r
+  echo >&2
 
-begin 'Applying patch' && {
-  if (cd "$work_dir" && diff -urN a b) >"$work_dir"/diff.patch; then
-    inf 'No diff.'
-    success
-    exit 0
-  fi
-
-  cat "$work_dir"/diff.patch >&2
-
-  if [[ "$interactive" = yes ]]; then
-    echo -n 'Apply? [y/N]: ' >&2
-    read -n1 -r ans
-    echo >&2
-    if [[ "$ans" != y ]]; then
-      failure
-      exit 1
-    fi
-  fi
-
-  if ! patch --dry-run -p1 -uEN -d "$prefix" <"$work_dir"/diff.patch; then
-    failure
+  if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+    echo "Aborted." >&2
     exit 1
   fi
+fi
 
-  patch -p1 -uEN -d "$prefix" <"$work_dir"/diff.patch
+(cd "$HOME"; patch -E -p1 <"$sandbox/patch.diff")
 
-  tar -cf "$dotfiles_home"/current.tgz -C "$work_dir"/b .
-  cp "$work_dir"/diff.patch "$patch_file"
-  inf "This patch is saved into '$patch_file'."
-
-  success
-}
-
-cat >&2 <<EOF
-
-The following command reverts this patch:
-
-  $ patch -p1 -uER -d '$HOME' < '$patch_file'
-
-Bye!
-EOF
+mkdir -p "$HOME/.local/var"
+tar -cf "$HOME/.local/var/dotfiles.tgz" -C "$sandbox/b" .
