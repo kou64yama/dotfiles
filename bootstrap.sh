@@ -13,6 +13,6 @@
   if [[ -n "$CI" ]]; then
     ./install.sh
   else
-    ./install.sh -i
+    yes | ./install.sh
   fi
 }
