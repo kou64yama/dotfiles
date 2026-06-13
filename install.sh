@@ -63,7 +63,13 @@ fi
 
 (
   cd "$HOME"
-  patch -E -p1 <"$sandbox/patch.diff"
+  if ! patch --dry-run -s -E -p1 --forward --batch <"$sandbox/patch.diff" >/dev/null 2>&1; then
+    echo "Error: Conflicts detected! Cannot apply dotfiles patch cleanly." >&2
+    echo "Please resolve the conflicts manually by checking the diff:" >&2
+    cat "$sandbox/patch.diff" >&2
+    exit 1
+  fi
+  patch -E -p1 --forward --batch <"$sandbox/patch.diff"
 )
 
 tar -cf "$sandbox/dotfiles.tgz" -C "$sandbox/b" .
