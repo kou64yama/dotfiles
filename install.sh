@@ -12,7 +12,6 @@ files=(
   '0644 .tmux.conf                                files/tmux/tmux.conf'
   '0644 .config/nvim/init.lua                     files/nvim/init.lua'
   '0644 .config/nvim/lua/config/lazy.lua          files/nvim/lua/config/lazy.lua'
-  '0644 .config/nvim/lua/plugins/editorconfig.lua files/nvim/lua/plugins/editorconfig.lua'
   '0644 .config/nvim/lua/plugins/statusline.lua   files/nvim/lua/plugins/statusline.lua'
 )
 interactive=no
