@@ -19,7 +19,11 @@ interactive=no
 
 while getopts i OPT; do
   case $OPT in
-    i) interactive=yes ;;
+  i) interactive=yes ;;
+  *)
+    echo "Usage: $0 [-i]" >&2
+    exit 1
+    ;;
   esac
 done
 shift $((OPTIND - 1))
@@ -45,7 +49,7 @@ if (cd "$sandbox" && diff -uNr a b >"$sandbox/patch.diff"); then
   exit 0
 fi
 
-if [[ "$interactive" == yes ]]; then
+if [[ "$interactive" = yes ]]; then
   cat "$sandbox/patch.diff" >&2
   echo >&2
   echo -n "Apply? (y/N): " >&2
@@ -58,7 +62,11 @@ if [[ "$interactive" == yes ]]; then
   fi
 fi
 
-(cd "$HOME"; patch -E -p1 <"$sandbox/patch.diff")
+(
+  cd "$HOME"
+  patch -E -p1 <"$sandbox/patch.diff"
+)
 
+tar -cf "$sandbox/dotfiles.tgz" -C "$sandbox/b" .
 mkdir -p "$HOME/.local/var"
-tar -cf "$HOME/.local/var/dotfiles.tgz" -C "$sandbox/b" .
+mv "$sandbox/dotfiles.tgz" "$HOME/.local/var/dotfiles.tgz"
