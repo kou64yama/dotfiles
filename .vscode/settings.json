@@ -1,6 +1,3 @@
 {
-  "editor.formatOnSave": true,
-  "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-  }
+  "editor.formatOnSave": true
 }
