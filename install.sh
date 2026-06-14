@@ -52,7 +52,7 @@ if [[ "$interactive" = yes ]]; then
   cat "$sandbox/patch.diff" >&2
   echo >&2
   echo -n "Apply? (y/N): " >&2
-  read -r
+  read -r REPLY
   echo >&2
 
   if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
