@@ -20,12 +20,10 @@ RUN set -eu; \
     *) echo "unsupported TARGETARCH: ${TARGETARCH}" >&2; exit 1 ;; \
   esac; \
   mise_tag=v${MISE_VERSION}; \
-  tmpdir="$(mktemp -d)"; \
-  trap 'rm -rf "$tmpdir"' EXIT; \
   mkdir -p /etc/skel/.local/bin; \
-  curl -fsSL "https://github.com/jdx/mise/releases/download/${mise_tag}/mise-${mise_tag}-linux-${mise_arch}" -o "${tmpdir}/mise"; \
-  echo "${mise_sha}  ${tmpdir}/mise" | sha256sum -c -; \
-  install -m 0755 "${tmpdir}/mise" /etc/skel/.local/bin/mise; \
+  curl -fsSL "https://github.com/jdx/mise/releases/download/${mise_tag}/mise-${mise_tag}-linux-${mise_arch}" -o /etc/skel/.local/bin/mise; \
+  echo "${mise_sha}  /etc/skel/.local/bin/mise" | sha256sum -c -; \
+  chmod 0755 /etc/skel/.local/bin/mise; \
   test "$(/etc/skel/.local/bin/mise --version | awk '{print $1}')" = "${MISE_VERSION}"
 RUN yes | ./install.sh
 RUN echo skip_global_compinit=1 >> /etc/skel/.zshenv
