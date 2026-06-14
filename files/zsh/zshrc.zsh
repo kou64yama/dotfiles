@@ -157,16 +157,6 @@ if command -v bat >/dev/null 2>&1; then
 fi
 
 #
-# rg
-#
-
-if command -v rg >/dev/null 2>&1; then
-  alias grep='rg'
-  alias egrep='rg'
-  alias fgrep='rg -f'
-fi
-
-#
 # xh
 #
 
