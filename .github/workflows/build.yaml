@@ -9,6 +9,13 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run ShellCheck
+        run: shellcheck install.sh bootstrap.sh
+
   bootstrap:
     runs-on: ubuntu-latest
     steps:
