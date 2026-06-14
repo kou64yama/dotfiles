@@ -54,6 +54,10 @@ jobs:
         with:
           load: true
           tags: ghcr.io/kou64yama/dotfiles:latest
+      - name: Smoke test mise version
+        run: |
+          version="$(docker run --rm ghcr.io/kou64yama/dotfiles:latest /home/dotfiles/.local/bin/mise --version)"
+          test "$(printf '%s\n' "$version" | awk '{print $1}')" = "2026.6.6"
       - name: Build and push
         if: ${{ github.event_name == 'push' }}
         uses: docker/build-push-action@v7
