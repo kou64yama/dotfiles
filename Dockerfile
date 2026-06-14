@@ -11,7 +11,7 @@ RUN --mount=type=cache,target=/var/lib/apt/lists --mount=type=cache,target=/var/
 
 WORKDIR /workspace
 
-COPY install.sh ./
+COPY install.sh manifest.txt ./
 COPY files/ ./files/
 
 ENV HOME=/etc/skel
