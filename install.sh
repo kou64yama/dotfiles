@@ -6,15 +6,6 @@ trap 'if [[ -n "$sandbox" ]]; then rm -rf "$sandbox"; fi' EXIT
 
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 sandbox=$(mktemp -d)
-files=(
-  '0644 .gitconfig                                files/git/gitconfig.ini'
-  '0644 .zshrc                                    files/zsh/zshrc.zsh'
-  '0644 .zimrc                                    files/zsh/zimrc.zsh'
-  '0644 .tmux.conf                                files/tmux/tmux.conf'
-  '0644 .config/nvim/init.lua                     files/nvim/init.lua'
-  '0644 .config/nvim/lua/config/lazy.lua          files/nvim/lua/config/lazy.lua'
-  '0644 .config/nvim/lua/plugins/statusline.lua   files/nvim/lua/plugins/statusline.lua'
-)
 interactive=no
 
 while getopts i OPT; do
@@ -28,13 +19,21 @@ while getopts i OPT; do
 done
 shift $((OPTIND - 1))
 
+while read -r line; do
+  if [[ "$line" =~ ^# ]] || [[ "$line" =~ ^[\ \t]*$ ]]; then
+    continue
+  fi
+
+  manifest+=("$line")
+done <"$script_dir/manifest.txt"
+
 mkdir -p "$sandbox/a"
 if [[ -f "$HOME/.local/var/dotfiles.tgz" ]]; then
   tar -xf "$HOME/.local/var/dotfiles.tgz" -C "$sandbox/a"
 fi
 
 mkdir -p "$sandbox/b"
-for file in "${files[@]}"; do
+for file in "${manifest[@]}"; do
   IFS=' ' read -r mode path src <<<"$file"
   dir=$(dirname "$path")
   if [[ ! -d "$sandbox/b/$dir" ]]; then
