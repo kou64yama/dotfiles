@@ -3,7 +3,7 @@
 {
   set -eo pipefail
 
-  trap 'rm -rf "$temp"' 0
+  trap 'rm -rf "$temp"' EXIT
   temp=$(mktemp -d)
   cd "$temp"
 
@@ -13,6 +13,6 @@
   if [[ -n "$CI" ]]; then
     ./install.sh
   else
-    yes | ./install.sh
+    ./install.sh -i
   fi
 }
