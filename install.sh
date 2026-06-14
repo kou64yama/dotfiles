@@ -4,6 +4,7 @@ set -eo pipefail
 
 trap 'if [[ -n "$sandbox" ]]; then rm -rf "$sandbox"; fi' EXIT
 
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 sandbox=$(mktemp -d)
 files=(
   '0644 .gitconfig                                files/git/gitconfig.ini'
@@ -39,7 +40,7 @@ for file in "${files[@]}"; do
   if [[ ! -d "$sandbox/b/$dir" ]]; then
     mkdir -p "$sandbox/b/$dir"
   fi
-  cp "$src" "$sandbox/b/$path"
+  cp "$script_dir/$src" "$sandbox/b/$path"
   chmod "$mode" "$sandbox/b/$path"
 done
 
