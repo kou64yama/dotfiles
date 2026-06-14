@@ -17,10 +17,10 @@ RUN echo skip_global_compinit=1 >> /etc/skel/.zshenv
 FROM ubuntu:24.04
 
 ARG PACKAGE_LIST='\
-  patch \
   git \
   neovim \
-'
+  tmux \
+  '
 RUN --mount=type=cache,target=/var/lib/apt/lists --mount=type=cache,target=/var/cache/apt/archives,sharing=locked \
   apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates curl sudo zsh ${PACKAGE_LIST}
