@@ -1,3 +1,10 @@
+#
+# PATH
+#
+
+PATH=$HOME/.local/bin:$PATH
+fpath+=$HOME/.local/share/zsh/site-functions
+
 # Start configuration added by Zim Framework install {{{
 #
 # User configuration sourced by interactive shells
@@ -105,13 +112,16 @@ fi
 source ${ZIM_HOME}/init.zsh
 # }}} End configuration added by Zim Framework install
 
-#
 # Activate mise
 #
 
-if [[ -x ~/.local/bin/mise ]]; then
-  eval "$(~/.local/bin/mise activate zsh)"
-  eval "$(~/.local/bin/mise completion zsh)"
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+
+  if [[ ! -f "${HOME}/.local/share/zsh/site-functions/_mise" ]]; then
+    mkdir -p "${HOME}/.local/share/zsh/site-functions"
+    mise completion zsh > "${HOME}/.local/share/zsh/site-functions/_mise"
+  fi
 fi
 
 #
